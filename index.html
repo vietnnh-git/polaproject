@@ -6,25 +6,50 @@
   <title>PolaProject - Sắp Ra Mắt</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Mesh gradient blobs -->
-  <div class="blob blob-cyan"></div>
-  <div class="blob blob-purple"></div>
-  <div class="blob blob-indigo"></div>
+  <!-- Warm background blobs -->
+  <div class="blob blob-peach"></div>
+  <div class="blob blob-gold"></div>
+  <div class="blob blob-lavender"></div>
 
-  <!-- Grid overlay -->
-  <div class="grid-overlay"></div>
+  <!-- Polaris Star — corner decoration -->
+  <div class="polaris" aria-hidden="true">
+    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="pg" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
+          <stop offset="60%" stop-color="#fbbf24" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <!-- Main rays -->
+      <ellipse cx="32" cy="32" rx="3.5" ry="28" fill="url(#pg)"/>
+      <ellipse cx="32" cy="32" rx="28" ry="3.5" fill="url(#pg)"/>
+      <!-- Diagonal rays (smaller) -->
+      <ellipse cx="32" cy="32" rx="2" ry="16" fill="url(#pg)" opacity="0.5" transform="rotate(45 32 32)"/>
+      <ellipse cx="32" cy="32" rx="2" ry="16" fill="url(#pg)" opacity="0.5" transform="rotate(-45 32 32)"/>
+      <!-- Core -->
+      <circle cx="32" cy="32" r="3.5" fill="white" opacity="0.95"/>
+    </svg>
+  </div>
 
   <!-- Main card -->
   <main class="card">
 
-    <!-- Rocket -->
-    <div class="rocket-wrap">
-      <span class="rocket">🚀</span>
+    <!-- Brand mark -->
+    <div class="brand-row">
+      <svg class="brand-star" viewBox="0 0 20 20" fill="none">
+        <ellipse cx="10" cy="10" rx="1.2" ry="9" fill="#d97706"/>
+        <ellipse cx="10" cy="10" rx="9" ry="1.2" fill="#d97706"/>
+        <ellipse cx="10" cy="10" rx="0.7" ry="5" fill="#d97706" opacity="0.5" transform="rotate(45 10 10)"/>
+        <ellipse cx="10" cy="10" rx="0.7" ry="5" fill="#d97706" opacity="0.5" transform="rotate(-45 10 10)"/>
+        <circle cx="10" cy="10" r="1.4" fill="#fef3c7"/>
+      </svg>
+      <span class="brand-label">POLARIS PROJECT</span>
     </div>
 
     <!-- Title -->
@@ -56,27 +81,55 @@
 
     <div class="divider"></div>
 
+    <!-- Music player -->
+    <div class="player-pill">
+      <div class="player-art">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.8" stroke-linecap="round">
+          <path d="M9 18V5l12-2v13"/>
+          <circle cx="6" cy="18" r="3"/>
+          <circle cx="18" cy="16" r="3"/>
+        </svg>
+      </div>
+      <div class="player-info">
+        <span class="player-tag">AMBIENT</span>
+        <span class="player-title">Sắp cập nhật...</span>
+      </div>
+      <button class="player-btn" id="playBtn" title="Play / Pause">
+        <svg id="iconPlay" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="5,3 19,12 5,21"/>
+        </svg>
+        <svg id="iconPause" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:none">
+          <rect x="6" y="4" width="4" height="16" rx="1"/>
+          <rect x="14" y="4" width="4" height="16" rx="1"/>
+        </svg>
+      </button>
+    </div>
+    <audio id="bgAudio" src="" loop></audio>
+
+    <div class="divider"></div>
+
     <!-- Social icons -->
     <div class="social-row">
-      <!-- X / Twitter -->
-      <a href="https://twitter.com" target="_blank" class="social-btn" title="Twitter / X">
+      <!-- Facebook -->
+      <a href="https://www.facebook.com/vietnnh/" target="_blank" rel="noopener" class="social-btn" title="Facebook">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.912-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
         </svg>
       </a>
       <!-- Instagram -->
-      <a href="https://instagram.com" target="_blank" class="social-btn" title="Instagram">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <a href="https://www.instagram.com/vietnnh/" target="_blank" rel="noopener" class="social-btn" title="Instagram">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
           <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
           <circle cx="12" cy="12" r="4"/>
           <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
         </svg>
       </a>
-      <!-- Email -->
-      <a href="mailto:hello@polaproject.com" class="social-btn" title="Email">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="4" width="20" height="16" rx="2"/>
-          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+      <!-- LinkedIn -->
+      <a href="https://www.linkedin.com/in/nnhviet1401" target="_blank" rel="noopener" class="social-btn" title="LinkedIn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+          <rect x="2" y="9" width="4" height="12"/>
+          <circle cx="4" cy="4" r="2"/>
         </svg>
       </a>
     </div>
