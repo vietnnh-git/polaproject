@@ -27,7 +27,8 @@ body {
 .blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(90px);
+  /* blur + SVG turbulence = blobs ripple like liquid seen through curved glass */
+  filter: blur(80px) url(#liquid-distort);
   pointer-events: none;
 }
 .blob-peach    { background: #a5b4fc; width: 600px; height: 600px; top: -18%; left: -12%; opacity: 0.6; animation: drift 10s ease-in-out infinite; }
@@ -57,7 +58,7 @@ body {
    ══════════════════════════════════ */
 .card {
   position: relative; z-index: 10;
-  width: 100%; max-width: 520px; margin: 1rem;
+  width: 100%; max-width: 440px; margin: 1rem;
   padding: 2.25rem 2rem;
   border-radius: 32px;
   overflow: hidden;
