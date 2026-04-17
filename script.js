@@ -17,29 +17,49 @@ document.getElementById('emailForm').addEventListener('submit', function (e) {
   console.log('Email đăng ký:', email);
 });
 
-// Music player
+// ── Music player ──
 const audio     = document.getElementById('bgAudio');
 const playBtn   = document.getElementById('playBtn');
 const iconPlay  = document.getElementById('iconPlay');
 const iconPause = document.getElementById('iconPause');
 
-playBtn.addEventListener('click', () => {
-  if (!audio.src || audio.src === window.location.href) return;
+function setPlaying(state) {
+  iconPlay.style.display  = state ? 'none'  : 'block';
+  iconPause.style.display = state ? 'block' : 'none';
+  playBtn.classList.toggle('playing', state);
+}
 
+// Autoplay: muted first (browsers always allow) → unmute on first interaction
+audio.muted  = true;
+audio.volume = 0.6;
+audio.play().then(() => {
+  // Playing muted — unmute on first user gesture anywhere on page
+  const unmute = () => {
+    audio.muted = false;
+    setPlaying(true);
+    document.removeEventListener('click',     unmute);
+    document.removeEventListener('touchstart', unmute);
+    document.removeEventListener('keydown',   unmute);
+  };
+  document.addEventListener('click',     unmute, { once: true });
+  document.addEventListener('touchstart', unmute, { once: true });
+  document.addEventListener('keydown',   unmute, { once: true });
+}).catch(() => {
+  // Autoplay fully blocked — wait for manual play button
+});
+
+playBtn.addEventListener('click', () => {
   if (audio.paused) {
+    audio.muted = false;
     audio.play();
-    iconPlay.style.display  = 'none';
-    iconPause.style.display = 'block';
-    playBtn.classList.add('playing');
+    setPlaying(true);
   } else {
     audio.pause();
-    iconPlay.style.display  = 'block';
-    iconPause.style.display = 'none';
-    playBtn.classList.remove('playing');
+    setPlaying(false);
   }
 });
 
-// Spotlight — mouse-follow light beam on card
+// ── Spotlight — mouse-follow light beam ──
 const card = document.querySelector('.card');
 card.addEventListener('mousemove', (e) => {
   const rect = card.getBoundingClientRect();
