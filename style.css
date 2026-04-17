@@ -16,8 +16,7 @@ body {
   overflow: hidden;
   position: relative;
   scroll-snap-align: start;
-  /* Forest twilight — lush, vivid, not black */
-  background: radial-gradient(ellipse at 40% 30%, #1a5c35 0%, #0d3d22 30%, #0a2a18 60%, #071a10 100%);
+  background: url('bg.jpg') center center / cover no-repeat;
 }
 
 /* ── Forest ambient blobs — twilight light patches ── */
