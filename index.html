@@ -11,7 +11,13 @@
 </head>
 <body>
 
-  <!-- Firefly forest canvas -->
+  <!-- Forest ambient light blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+
+  <!-- Firefly canvas -->
   <canvas id="fireflies"></canvas>
 
   <!-- Polaris Star — corner decoration -->
@@ -67,6 +73,22 @@
     </div>
     <div class="progress-track">
       <div class="progress-fill"></div>
+      <span class="progress-tip" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="sg" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
+              <stop offset="40%" stop-color="#fbbf24" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <ellipse cx="12" cy="12" rx="1.2" ry="10" fill="url(#sg)"/>
+          <ellipse cx="12" cy="12" rx="10" ry="1.2" fill="url(#sg)"/>
+          <ellipse cx="12" cy="12" rx="0.7" ry="5.5" fill="url(#sg)" opacity="0.6" transform="rotate(45 12 12)"/>
+          <ellipse cx="12" cy="12" rx="0.7" ry="5.5" fill="url(#sg)" opacity="0.6" transform="rotate(-45 12 12)"/>
+          <circle cx="12" cy="12" r="1.8" fill="white" opacity="0.95"/>
+        </svg>
+      </span>
     </div>
 
     <div class="divider"></div>
