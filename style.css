@@ -136,9 +136,9 @@ body {
   animation: star-pulse 3s ease-in-out infinite;
 }
 .subtitle {
-  color: rgba(255, 255, 255, 0.75); font-size: 0.78rem; text-align: center;
+  color: rgba(255, 255, 255, 0.92); font-size: 0.78rem; text-align: center;
   font-weight: 300; letter-spacing: 0.04em; font-style: italic;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.7);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.8);
 }
 
 /* ── Divider ── */
@@ -149,8 +149,8 @@ body {
 
 /* ── Progress ── */
 .progress-header { display: flex; justify-content: space-between; margin-bottom: 0.6rem; }
-.progress-label  { color: rgba(255,255,255,0.7); font-size: 0.6rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
-.progress-value  { color: #fde68a; font-size: 0.68rem; font-weight: 700; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+.progress-label  { color: rgba(255,255,255,0.9); font-size: 0.6rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; text-shadow: 0 1px 4px rgba(0,0,0,0.7); }
+.progress-value  { color: #fde68a; font-size: 0.68rem; font-weight: 700; text-shadow: 0 1px 4px rgba(0,0,0,0.7); }
 
 .progress-track {
   height: 10px; border-radius: 99px; overflow: hidden;
@@ -160,8 +160,8 @@ body {
 }
 .progress-fill {
   position: relative; height: 100%; width: 0; border-radius: 99px;
-  background: linear-gradient(90deg, #818cf8, #a855f7, #ec4899, #f472b6);
-  box-shadow: 0 0 12px rgba(168,85,247,0.6), 0 0 24px rgba(168,85,247,0.3);
+  background: linear-gradient(90deg, #fbbf24, #a3e635, #4ade80);
+  box-shadow: 0 0 12px rgba(163,230,53,0.6), 0 0 24px rgba(251,191,36,0.3);
   animation: fill-bar 1.4s cubic-bezier(.22,1,.36,1) 0.5s forwards;
   overflow: hidden;
 }
@@ -178,24 +178,24 @@ body {
 }
 
 /* ── Form ── */
-.form-hint { color: rgba(255,255,255,0.65); font-size: 0.7rem; text-align: center; margin-bottom: 0.85rem; font-style: italic; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+.form-hint { color: rgba(255,255,255,0.88); font-size: 0.7rem; text-align: center; margin-bottom: 0.85rem; font-style: italic; text-shadow: 0 1px 4px rgba(0,0,0,0.7); }
 .form { display: flex; flex-direction: column; gap: 0.5rem; }
 
 .email-input {
   width: 100%; padding: 0.72rem 1rem; border-radius: 14px;
   font-size: 0.84rem; font-family: inherit; color: #ffffff;
-  background: rgba(0,0,0,0.25);
+  background: rgba(10,40,15,0.45);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  border: 0.5px solid rgba(255,255,255,0.3);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), inset 0 1px 4px rgba(0,0,0,0.2);
+  border: 0.5px solid rgba(163,230,53,0.35);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), inset 0 1px 4px rgba(0,0,0,0.2);
   transition: all 0.25s;
 }
-.email-input::placeholder { color: rgba(255,255,255,0.4); }
+.email-input::placeholder { color: rgba(255,255,255,0.45); }
 .email-input:focus {
   outline: none;
-  background: rgba(0,0,0,0.35);
-  border-color: rgba(253,230,138,0.6);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 0 0 3px rgba(253,230,138,0.15);
+  background: rgba(10,40,15,0.6);
+  border-color: rgba(163,230,53,0.65);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 0 0 3px rgba(163,230,53,0.18);
 }
 
 .cta-btn {
@@ -203,9 +203,9 @@ body {
   border-radius: 14px; padding: 0.82rem 1rem;
   font-size: 0.84rem; font-weight: 600; font-family: inherit;
   color: #fff; letter-spacing: 0.02em;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+  background: linear-gradient(135deg, #15803d 0%, #16a34a 50%, #4ade80 100%);
   border: 0.5px solid rgba(255,255,255,0.35);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 16px rgba(99,102,241,0.4);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 16px rgba(22,163,74,0.4);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 .btn-shimmer {
@@ -214,7 +214,7 @@ body {
   transition: left 0.5s; pointer-events: none;
 }
 .cta-btn:hover .btn-shimmer { left: 100%; }
-.cta-btn:hover { transform: translateY(-1px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 8px 24px rgba(100,200,50,0.5); }
+.cta-btn:hover { transform: translateY(-1px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 8px 24px rgba(74,222,128,0.45); }
 .cta-btn:active { transform: translateY(0); }
 .cta-btn.success { background: linear-gradient(135deg, #4ade80, #16a34a); color: #fff; }
 
@@ -276,7 +276,7 @@ body {
 }
 
 /* ── Copyright ── */
-.copyright { color: rgba(255,255,255,0.4); font-size: 0.62rem; text-align: center; letter-spacing: 0.03em; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+.copyright { color: rgba(255,255,255,0.6); font-size: 0.62rem; text-align: center; letter-spacing: 0.03em; text-shadow: 0 1px 4px rgba(0,0,0,0.7); }
 
 @media (max-width: 540px) {
   .card { padding: 1.5rem 1.25rem; border-radius: 24px; max-height: calc(100dvh - 2rem); overflow-y: auto; scrollbar-width: none; }
