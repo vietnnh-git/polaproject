@@ -1,41 +1,89 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PolaProject - Sắp Ra Mắt</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PolaProject - Sắp Ra Mắt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="content">
-            <div class="logo">🚀</div>
-            <h1>PolaProject</h1>
-            <p class="subtitle">Đang chuẩn bị một cái gì đó tuyệt vời</p>
-            
-            <div class="progress">
-                <div class="progress-bar"></div>
-            </div>
-            <p class="progress-text">Tiến độ: 85%</p>
-            
-            <div class="cta-section">
-                <p>Nhận thông báo khi ra mắt:</p>
-                <form class="email-form" id="emailForm">
-                    <input type="email" placeholder="Nhập email của bạn" required>
-                    <button type="submit">Nhận thông báo</button>
-                </form>
-            </div>
-            
-            <div class="social">
-                <a href="https://twitter.com" target="_blank">Twitter</a>
-                <a href="https://instagram.com" target="_blank">Instagram</a>
-                <a href="mailto:hello@polaproject.com">Email</a>
-            </div>
-            
-            <p class="footer-text">© 2026 PolaProject. Tất cả quyền được bảo lưu.</p>
-        </div>
+
+  <!-- Mesh gradient blobs -->
+  <div class="blob blob-cyan"></div>
+  <div class="blob blob-purple"></div>
+  <div class="blob blob-indigo"></div>
+
+  <!-- Grid overlay -->
+  <div class="grid-overlay"></div>
+
+  <!-- Main card -->
+  <main class="card">
+
+    <!-- Rocket -->
+    <div class="rocket-wrap">
+      <span class="rocket">🚀</span>
     </div>
-    
-    <script src="script.js"></script>
+
+    <!-- Title -->
+    <h1 class="title">PolaProject</h1>
+    <p class="subtitle">Đang chuẩn bị một cái gì đó tuyệt vời</p>
+
+    <div class="divider"></div>
+
+    <!-- Progress -->
+    <div class="progress-header">
+      <span class="progress-label">Tiến độ</span>
+      <span class="progress-value">85%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Email form -->
+    <p class="form-hint">Nhận thông báo khi ra mắt</p>
+    <form id="emailForm" class="form">
+      <input type="email" class="email-input" placeholder="your@email.com" required>
+      <button type="submit" class="cta-btn">
+        <span class="btn-shimmer"></span>
+        Nhận thông báo
+      </button>
+    </form>
+
+    <div class="divider"></div>
+
+    <!-- Social icons -->
+    <div class="social-row">
+      <!-- X / Twitter -->
+      <a href="https://twitter.com" target="_blank" class="social-btn" title="Twitter / X">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.912-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+      </a>
+      <!-- Instagram -->
+      <a href="https://instagram.com" target="_blank" class="social-btn" title="Instagram">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+      <!-- Email -->
+      <a href="mailto:hello@polaproject.com" class="social-btn" title="Email">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+        </svg>
+      </a>
+    </div>
+
+    <p class="copyright">© 2026 PolaProject. Tất cả quyền được bảo lưu.</p>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
