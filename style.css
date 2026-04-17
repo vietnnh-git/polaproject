@@ -184,23 +184,60 @@ body {
 }
 .progress-tip {
   position: absolute;
-  top: 50%; left: 0;
-  width: 22px; height: 22px;
+  top: 50%; left: 0%;
+  width: 26px; height: 26px;
   transform: translateY(-50%) translateX(-50%);
-  animation: fill-bar 1.4s cubic-bezier(.22,1,.36,1) 0.5s forwards,
-             star-burn 0.9s ease-in-out infinite alternate;
+  /* tip-slide đưa star tới cuối thanh, weld-burn tạo hiệu ứng hàn */
+  animation: tip-slide 1.4s cubic-bezier(.22,1,.36,1) 0.5s forwards,
+             weld-burn  0.18s ease-in-out infinite alternate;
   z-index: 5; pointer-events: none;
 }
 .progress-tip svg { width: 100%; height: 100%; }
 
-@keyframes fill-bar { to { width: 85%; } }
+@keyframes fill-bar  { to { width: 85%; } }
+@keyframes tip-slide { to { left: 85%; } }
 @keyframes shimmer-run {
   0%   { transform: translateX(-100%); }
   100% { transform: translateX(260%); }
 }
-@keyframes star-burn {
-  0%   { filter: drop-shadow(0 0 4px #fbbf24) drop-shadow(0 0 8px #f59e0b);  transform: translateY(-50%) translateX(-50%) scale(1)    rotate(-8deg); }
-  100% { filter: drop-shadow(0 0 9px #fff)    drop-shadow(0 0 18px #fbbf24) drop-shadow(0 0 28px #f59e0b); transform: translateY(-50%) translateX(-50%) scale(1.25) rotate(8deg);  }
+/* Hiệu ứng hàn thiếc: lõi trắng xanh cực sáng, nhấp nháy nhanh */
+@keyframes weld-burn {
+  0%  {
+    filter:
+      drop-shadow(0 0 2px #fff)
+      drop-shadow(0 0 5px #fff)
+      drop-shadow(0 0 10px #93c5fd)
+      drop-shadow(0 0 18px #3b82f6)
+      drop-shadow(0 0 30px #fbbf24);
+    transform: translateY(-50%) translateX(-50%) scale(1) rotate(-6deg);
+  }
+  33% {
+    filter:
+      drop-shadow(0 0 4px #fff)
+      drop-shadow(0 0 10px #fff)
+      drop-shadow(0 0 20px #fff)
+      drop-shadow(0 0 32px #bfdbfe)
+      drop-shadow(0 0 48px #60a5fa);
+    transform: translateY(-50%) translateX(-50%) scale(1.3) rotate(4deg);
+  }
+  66% {
+    filter:
+      drop-shadow(0 0 3px #fff)
+      drop-shadow(0 0 7px #fff)
+      drop-shadow(0 0 14px #fde68a)
+      drop-shadow(0 0 24px #fbbf24)
+      drop-shadow(0 0 40px #f59e0b);
+    transform: translateY(-50%) translateX(-50%) scale(1.1) rotate(-3deg);
+  }
+  100% {
+    filter:
+      drop-shadow(0 0 5px #fff)
+      drop-shadow(0 0 12px #fff)
+      drop-shadow(0 0 22px #fff)
+      drop-shadow(0 0 38px #93c5fd)
+      drop-shadow(0 0 55px #3b82f6);
+    transform: translateY(-50%) translateX(-50%) scale(1.4) rotate(8deg);
+  }
 }
 
 /* ── Form ── */
