@@ -106,6 +106,15 @@ function setPlaying(state) {
 
 audio.muted  = true;
 audio.volume = 0.6;
+audio.currentTime = 33;
+
+// Loop về giây 33 thay vì 0
+audio.removeAttribute('loop');
+audio.addEventListener('ended', () => {
+  audio.currentTime = 33;
+  audio.play().catch(() => {});
+});
+
 audio.play().then(() => {
   const unmute = () => {
     audio.muted = false;

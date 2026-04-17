@@ -153,10 +153,21 @@ body {
 .progress-value  { color: #fde68a; font-size: 0.68rem; font-weight: 700; text-shadow: 0 1px 4px rgba(0,0,0,0.7); }
 
 .progress-track {
-  height: 10px; border-radius: 99px; overflow: hidden;
+  height: 10px; border-radius: 99px; overflow: visible;
   background: rgba(255,255,255,0.12);
   border: 0.5px solid rgba(255,255,255,0.2);
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+  position: relative;
+  /* clip only the fill bar, not the star */
+  -webkit-mask: none; mask: none;
+}
+/* Re-clip the fill bar background */
+.progress-track::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: 99px;
+  background: rgba(255,255,255,0.12);
+  pointer-events: none; z-index: 0;
 }
 .progress-fill {
   position: relative; height: 100%; width: 0; border-radius: 99px;
@@ -171,10 +182,25 @@ body {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
   animation: shimmer-run 1.6s ease-in-out infinite;
 }
+.progress-tip {
+  position: absolute;
+  top: 50%; left: 0;
+  width: 22px; height: 22px;
+  transform: translateY(-50%) translateX(-50%);
+  animation: fill-bar 1.4s cubic-bezier(.22,1,.36,1) 0.5s forwards,
+             star-burn 0.9s ease-in-out infinite alternate;
+  z-index: 5; pointer-events: none;
+}
+.progress-tip svg { width: 100%; height: 100%; }
+
 @keyframes fill-bar { to { width: 85%; } }
 @keyframes shimmer-run {
   0%   { transform: translateX(-100%); }
   100% { transform: translateX(260%); }
+}
+@keyframes star-burn {
+  0%   { filter: drop-shadow(0 0 4px #fbbf24) drop-shadow(0 0 8px #f59e0b);  transform: translateY(-50%) translateX(-50%) scale(1)    rotate(-8deg); }
+  100% { filter: drop-shadow(0 0 9px #fff)    drop-shadow(0 0 18px #fbbf24) drop-shadow(0 0 28px #f59e0b); transform: translateY(-50%) translateX(-50%) scale(1.25) rotate(8deg);  }
 }
 
 /* ── Form ── */
