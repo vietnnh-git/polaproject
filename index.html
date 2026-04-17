@@ -41,7 +41,23 @@
   <main class="card">
 
     <!-- Title -->
-    <h1 class="title">Pola Project</h1>
+    <h1 class="title">
+      <svg class="title-star" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <defs>
+          <radialGradient id="ts" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
+            <stop offset="55%" stop-color="#fbbf24" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <ellipse cx="12" cy="12" rx="1.4" ry="11" fill="url(#ts)"/>
+        <ellipse cx="12" cy="12" rx="11" ry="1.4" fill="url(#ts)"/>
+        <ellipse cx="12" cy="12" rx="0.8" ry="6" fill="url(#ts)" opacity="0.55" transform="rotate(45 12 12)"/>
+        <ellipse cx="12" cy="12" rx="0.8" ry="6" fill="url(#ts)" opacity="0.55" transform="rotate(-45 12 12)"/>
+        <circle cx="12" cy="12" r="1.5" fill="white" opacity="0.95"/>
+      </svg>
+      pola project
+    </h1>
     <p class="subtitle">Đang chuẩn bị một cái gì đó tuyệt vời</p>
 
     <div class="divider"></div>
@@ -79,8 +95,8 @@
         </svg>
       </div>
       <div class="player-info">
-        <span class="player-tag">AMBIENT</span>
-        <span class="player-title">Sắp cập nhật...</span>
+        <span class="player-tag">AVICII</span>
+        <span class="player-title">The Night</span>
       </div>
       <button class="player-btn" id="playBtn" title="Play / Pause">
         <svg id="iconPlay" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
