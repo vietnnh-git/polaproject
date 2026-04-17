@@ -71,7 +71,7 @@ body {
   animation: rise 0.8s cubic-bezier(.22,1,.36,1);
 }
 
-/* Lens gradient — simulates light refracting through curved glass */
+/* Lens gradient — static refraction overlay */
 .card::before {
   content: '';
   position: absolute; inset: 0;
@@ -86,6 +86,23 @@ body {
   z-index: 0;
 }
 
+/* Spotlight — follows mouse, sits above lens */
+.card::after {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: inherit; pointer-events: none;
+  background: radial-gradient(
+    500px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.22),
+    rgba(255, 220, 160, 0.08) 40%,
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 1;
+}
+.card:hover::after { opacity: 1; }
+
 /* All direct children sit above the lens overlay */
 .card > * { position: relative; z-index: 1; }
 
@@ -98,9 +115,16 @@ body {
 .title {
   font-size: 2.4rem; font-weight: 700; text-align: center;
   letter-spacing: -0.04em; margin-bottom: 0.4rem;
-  /* Warm dark gradient — legible on light glass */
+  display: flex; align-items: center; justify-content: center; gap: 0.4rem;
   background: linear-gradient(135deg, #1a0800 0%, #7c2d12 50%, #c2410c 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.title-star {
+  width: 1.8rem; height: 1.8rem; flex-shrink: 0;
+  filter: drop-shadow(0 0 6px rgba(251,191,36,0.8));
+  animation: star-pulse 3s ease-in-out infinite;
+  /* override gradient clip so SVG shows correctly */
+  -webkit-text-fill-color: initial;
 }
 .subtitle {
   color: rgba(120, 53, 15, 0.6); font-size: 0.78rem; text-align: center;
