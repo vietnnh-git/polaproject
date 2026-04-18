@@ -40,6 +40,25 @@ body {
   66%      { transform: translate(-14px,16px) scale(0.97); }
 }
 
+/* ── Milky Way diagonal band ── */
+.milkyway {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: linear-gradient(
+    116deg,
+    transparent      0%,
+    transparent      22%,
+    rgba(160,130,255,0.014) 30%,
+    rgba(200,175,255,0.038) 38%,
+    rgba(220,200,255,0.055) 44%,
+    rgba(235,220,255,0.072) 50%,
+    rgba(220,200,255,0.055) 56%,
+    rgba(200,175,255,0.038) 62%,
+    rgba(160,130,255,0.014) 70%,
+    transparent      78%,
+    transparent      100%
+  );
+}
+
 /* ── Star canvas ── */
 #fireflies {
   position: fixed;

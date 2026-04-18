@@ -1,10 +1,7 @@
-// ── Star Field ──
+// ── Star Field — 3 tier: tiny / medium / large ──
 (function () {
   const canvas = document.getElementById('fireflies');
   const ctx    = canvas.getContext('2d');
-  const STAR_COUNT = 200;
-  const stars  = [];
-  let   shootingStars = [];
 
   function resize() {
     canvas.width  = window.innerWidth;
@@ -13,97 +10,203 @@
   resize();
   window.addEventListener('resize', resize);
 
+  // ── Star class — tier controls size, brightness, behaviour ──
   class Star {
-    constructor() { this.init(); }
+    constructor(tier) {
+      this.tier = tier;
+      this.reset();
+    }
 
-    init() {
+    reset() {
       this.x     = Math.random() * canvas.width;
       this.y     = Math.random() * canvas.height;
-      this.r     = Math.random() * 1.1 + 0.2;
-      this.glow  = this.r * (3 + Math.random() * 5);
       this.phase = Math.random() * Math.PI * 2;
-      this.speed = 0.004 + Math.random() * 0.012;
-      // 85% white-blue, 15% warm gold
+
+      if (this.tier === 'tiny') {
+        this.r        = Math.random() * 0.30 + 0.08;
+        this.glow     = this.r * 3;
+        this.speed    = 0.003 + Math.random() * 0.007;
+        this.maxAlpha = 0.10 + Math.random() * 0.22;
+      } else if (this.tier === 'medium') {
+        this.r        = Math.random() * 0.65 + 0.32;
+        this.glow     = this.r * 4.5;
+        this.speed    = 0.005 + Math.random() * 0.014;
+        this.maxAlpha = 0.28 + Math.random() * 0.48;
+      } else {                                   // large
+        this.r        = Math.random() * 0.80 + 1.10;
+        this.glow     = this.r * 7;
+        this.speed    = 0.004 + Math.random() * 0.009;
+        this.maxAlpha = 0.60 + Math.random() * 0.40;
+      }
+
+      // 85% cool white-blue, 15% warm gold
       const cold = Math.random() > 0.15;
-      this.hue   = cold ? (210 + Math.random() * 50) : (45 + Math.random() * 20);
-      this.sat   = cold ? (20 + Math.random() * 45) : (80 + Math.random() * 15);
-      this.lum   = 85 + Math.random() * 15;
+      this.hue = cold ? 210 + Math.random() * 50 : 44 + Math.random() * 18;
+      this.sat = cold ? 18  + Math.random() * 42  : 75 + Math.random() * 20;
+      this.lum = 86 + Math.random() * 14;
     }
 
-    update() {
-      this.phase += this.speed;
-    }
+    update() { this.phase += this.speed; }
 
     draw() {
-      const alpha = 0.25 + (Math.sin(this.phase) * 0.5 + 0.5) * 0.75;
+      const alpha = (Math.sin(this.phase) * 0.5 + 0.5) * this.maxAlpha;
+      if (alpha < 0.012) return;
 
+      const col = `${this.hue},${this.sat}%,${this.lum}%`;
+
+      // Hào quang
       const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.glow);
-      g.addColorStop(0,   `hsla(${this.hue},${this.sat}%,${this.lum}%,${alpha * 0.5})`);
-      g.addColorStop(1,   `hsla(${this.hue},${this.sat}%,${this.lum}%,0)`);
+      g.addColorStop(0,   `hsla(${col},${(alpha * 0.55).toFixed(3)})`);
+      g.addColorStop(0.4, `hsla(${col},${(alpha * 0.18).toFixed(3)})`);
+      g.addColorStop(1,   `hsla(${col},0)`);
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.glow, 0, Math.PI * 2);
       ctx.fillStyle = g;
       ctx.fill();
 
+      // Lõi sao
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = `hsla(${this.hue},${this.sat}%,${this.lum}%,${alpha})`;
+      ctx.fillStyle = `hsla(${col},${Math.min(alpha * 1.9, 1).toFixed(3)})`;
       ctx.fill();
+
+      // Tia chữ thập — chỉ sao lớn, chỉ khi đủ sáng
+      if (this.tier === 'large' && alpha > 0.38) {
+        const t      = (alpha - 0.38) * 1.6;
+        const hRay   = this.glow * 3.0;
+        const vRay   = this.glow * 1.8;
+
+        ctx.save();
+        ctx.globalAlpha = t * 0.48;
+
+        const gH = ctx.createLinearGradient(this.x - hRay, this.y, this.x + hRay, this.y);
+        gH.addColorStop(0,   'transparent');
+        gH.addColorStop(0.5, `hsla(${col},1)`);
+        gH.addColorStop(1,   'transparent');
+        ctx.fillStyle = gH;
+        ctx.fillRect(this.x - hRay, this.y - 1.3, hRay * 2, 2.6);
+
+        const gV = ctx.createLinearGradient(this.x, this.y - vRay, this.x, this.y + vRay);
+        gV.addColorStop(0,   'transparent');
+        gV.addColorStop(0.5, `hsla(${col},1)`);
+        gV.addColorStop(1,   'transparent');
+        ctx.fillStyle = gV;
+        ctx.fillRect(this.x - 1.3, this.y - vRay, 2.6, vRay * 2);
+
+        ctx.restore();
+      }
     }
   }
+
+  // Khởi tạo 3 tier
+  const stars = [
+    ...Array.from({ length: 155 }, () => new Star('tiny')),
+    ...Array.from({ length:  42 }, () => new Star('medium')),
+    ...Array.from({ length:  12 }, () => new Star('large')),
+  ];
+
+  // ── Shooting Stars — cải thiện ──
+  let shooters   = [];
+  let nextShoot  = Date.now() + 1500 + Math.random() * 2000;
 
   class ShootingStar {
     constructor() {
-      this.x    = Math.random() * canvas.width * 0.75;
-      this.y    = Math.random() * canvas.height * 0.45;
-      const spd = 9 + Math.random() * 7;
-      const ang = Math.PI / 5 + Math.random() * Math.PI / 5;
-      this.vx   = Math.cos(ang) * spd;
-      this.vy   = Math.sin(ang) * spd;
-      this.life = 1;
-      this.dead = false;
+      // Spawn rộng hơn: bất kỳ đâu trong 80% trên-trái màn hình
+      this.x = Math.random() * canvas.width  * 0.82;
+      this.y = Math.random() * canvas.height * 0.50;
+
+      // Góc: 28°–52° (đa dạng hơn trước)
+      const ang     = Math.PI * (28 + Math.random() * 24) / 180;
+      const spd     = 11 + Math.random() * 10;
+      this.vx       = Math.cos(ang) * spd;
+      this.vy       = Math.sin(ang) * spd;
+      this.tailLen  = 85 + Math.random() * 130;
+      this.width    = 0.9 + Math.random() * 1.1;
+      this.alpha    = 0;
+      this.maxAlpha = 0.55 + Math.random() * 0.45;
+      this.alive    = true;
+
+      // Màu: trắng-xanh thiên hà
+      const pal = [[255,255,255],[225,235,255],[205,218,255],[215,205,255]];
+      this.rgb = pal[Math.floor(Math.random() * pal.length)];
     }
 
     update() {
-      this.x    += this.vx;
-      this.y    += this.vy;
-      this.life -= 0.022;
-      if (this.life <= 0) this.dead = true;
+      this.x += this.vx;
+      this.y += this.vy;
+
+      // Fade in nhanh
+      this.alpha = Math.min(this.alpha + 0.11, this.maxAlpha);
+
+      // Fade out gần mép màn hình
+      const edge = Math.min(canvas.width - this.x, canvas.height - this.y, this.x + 40);
+      if (edge < 140) this.alpha *= edge / 140;
+
+      if (this.x > canvas.width + 30 || this.y > canvas.height + 30 || this.alpha < 0.008)
+        this.alive = false;
     }
 
     draw() {
-      const tail = { x: this.x - this.vx * 9, y: this.y - this.vy * 9 };
-      const g = ctx.createLinearGradient(tail.x, tail.y, this.x, this.y);
-      g.addColorStop(0, `rgba(255,255,255,0)`);
-      g.addColorStop(1, `rgba(220,210,255,${this.life * 0.9})`);
+      if (this.alpha < 0.008) return;
+      const [r, g, b] = this.rgb;
+      const spd  = Math.hypot(this.vx, this.vy);
+      const tx   = this.x - (this.vx / spd) * this.tailLen;
+      const ty   = this.y - (this.vy / spd) * this.tailLen;
+
+      // Đuôi gradient — mờ dần về phía sau
+      const tail = ctx.createLinearGradient(this.x, this.y, tx, ty);
+      tail.addColorStop(0,    `rgba(${r},${g},${b},${this.alpha})`);
+      tail.addColorStop(0.28, `rgba(${r},${g},${b},${(this.alpha * 0.45).toFixed(3)})`);
+      tail.addColorStop(1,    `rgba(${r},${g},${b},0)`);
       ctx.beginPath();
-      ctx.moveTo(tail.x, tail.y);
-      ctx.lineTo(this.x, this.y);
-      ctx.strokeStyle = g;
-      ctx.lineWidth   = 1.5;
+      ctx.moveTo(this.x, this.y);
+      ctx.lineTo(tx, ty);
+      ctx.strokeStyle = tail;
+      ctx.lineWidth   = this.width;
+      ctx.lineCap     = 'round';
       ctx.stroke();
 
-      // bright head
+      // Hào quang đầu sao
+      const gl = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, 9);
+      gl.addColorStop(0,   `rgba(${r},${g},${b},${this.alpha})`);
+      gl.addColorStop(0.4, `rgba(${r},${g},${b},${(this.alpha * 0.32).toFixed(3)})`);
+      gl.addColorStop(1,   `rgba(${r},${g},${b},0)`);
       ctx.beginPath();
-      ctx.arc(this.x, this.y, 1.2, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,255,255,${this.life})`;
+      ctx.arc(this.x, this.y, 9, 0, Math.PI * 2);
+      ctx.fillStyle = gl;
+      ctx.fill();
+
+      // Lõi trắng sáng
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, 1.4, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${Math.min(this.alpha * 1.6, 1).toFixed(3)})`;
       ctx.fill();
     }
   }
 
-  for (let i = 0; i < STAR_COUNT; i++) stars.push(new Star());
-
-  function launchShootingStar() {
-    shootingStars.push(new ShootingStar());
-    setTimeout(launchShootingStar, 3000 + Math.random() * 4000);
+  function spawnShooters() {
+    if (document.hidden) { nextShoot = Date.now() + 2000; return; }
+    // 50% → 1, 35% → 2, 15% → 3 cùng lúc
+    const roll  = Math.random();
+    const count = roll < 0.50 ? 1 : roll < 0.85 ? 2 : 3;
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => shooters.push(new ShootingStar()), i * (140 + Math.random() * 260));
+    }
+    nextShoot = Date.now() + 2200 + Math.random() * 3800;
   }
-  setTimeout(launchShootingStar, 1200 + Math.random() * 2000);
 
   function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     stars.forEach(s => { s.update(); s.draw(); });
-    shootingStars.forEach(s => { s.update(); s.draw(); });
-    shootingStars = shootingStars.filter(s => !s.dead);
+
+    if (Date.now() >= nextShoot) spawnShooters();
+    for (let i = shooters.length - 1; i >= 0; i--) {
+      shooters[i].update();
+      shooters[i].draw();
+      if (!shooters[i].alive) shooters.splice(i, 1);
+    }
+
     requestAnimationFrame(loop);
   }
   loop();
