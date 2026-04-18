@@ -49,21 +49,23 @@
 
     <!-- Title -->
     <h1 class="title">
-      <svg class="title-star" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <defs>
-          <radialGradient id="ts" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
-            <stop offset="55%" stop-color="#fbbf24" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
-          </radialGradient>
-        </defs>
-        <ellipse cx="12" cy="12" rx="1.4" ry="11" fill="url(#ts)"/>
-        <ellipse cx="12" cy="12" rx="11" ry="1.4" fill="url(#ts)"/>
-        <ellipse cx="12" cy="12" rx="0.8" ry="6" fill="url(#ts)" opacity="0.55" transform="rotate(45 12 12)"/>
-        <ellipse cx="12" cy="12" rx="0.8" ry="6" fill="url(#ts)" opacity="0.55" transform="rotate(-45 12 12)"/>
-        <circle cx="12" cy="12" r="1.5" fill="white" opacity="0.95"/>
-      </svg>
-      pola project
+      <span class="star-wrap">
+        <svg class="title-star" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <defs>
+            <radialGradient id="ts" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
+              <stop offset="55%" stop-color="#fbbf24" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <ellipse cx="12" cy="12" rx="1.4" ry="11" fill="url(#ts)"/>
+          <ellipse cx="12" cy="12" rx="11" ry="1.4" fill="url(#ts)"/>
+          <ellipse cx="12" cy="12" rx="0.8" ry="6" fill="url(#ts)" opacity="0.55" transform="rotate(45 12 12)"/>
+          <ellipse cx="12" cy="12" rx="0.8" ry="6" fill="url(#ts)" opacity="0.55" transform="rotate(-45 12 12)"/>
+          <circle cx="12" cy="12" r="1.5" fill="white" opacity="0.95"/>
+        </svg>
+      </span>
+      <span class="title-text"><span class="l l0">p</span><span class="l l1">o</span><span class="l l2">l</span><span class="l l3">a</span><span class="l l4"> </span><span class="l l5">p</span><span class="l l6">r</span><span class="l l7">o</span><span class="l l8">j</span><span class="l l9">e</span><span class="l l10">c</span><span class="l l11">t</span></span>
     </h1>
     <p class="subtitle">Ngôi sao dẫn lối cho những hành trình mới</p>
 
@@ -164,6 +166,9 @@
 
     <p class="copyright">© 2026 Pola Project. Tất cả quyền được bảo lưu.</p>
   </main>
+
+  <!-- Card border glow — positioned by JS -->
+  <div id="cardStarGlow"></div>
 
   <script src="script.js"></script>
 </body>
