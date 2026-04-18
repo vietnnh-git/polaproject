@@ -202,14 +202,10 @@ body {
   }
 }
 
-/* Card border glow — cold white-blue, mask = border strip only */
+/* Card border glow — background set dynamically by JS (multiple radial-gradients) */
 #cardStarGlow {
   position: fixed; pointer-events: none; z-index: 11; opacity: 0;
   border-radius: 34px; padding: 2px;
-  background: radial-gradient(circle 65px at var(--sx, 50%) var(--sy, 50%),
-    rgba(215,238,255,1),
-    rgba(175,215,255,0.55) 38%,
-    transparent 68%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);

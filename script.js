@@ -105,10 +105,9 @@
     ...Array.from({ length:  12 }, () => new Star('large')),
   ];
 
-  // ── Card border glow tracking ──
+  // ── Card border glow — additive: mỗi sao gần card tạo 1 điểm sáng riêng ──
   const cardEl = document.querySelector('.card');
   const glowEl = document.getElementById('cardStarGlow');
-  let cardGlow = 0;
 
   function closestBorderPoint(px, py, rect) {
     const inside = px >= rect.left && px <= rect.right && py >= rect.top && py <= rect.bottom;
@@ -130,28 +129,41 @@
   function updateCardGlow() {
     const rect   = cardEl.getBoundingClientRect();
     const MARGIN = 65;
-    let target   = 0;
-    let minDist  = Infinity;
-    let bestPt   = { x: rect.left + rect.width / 2, y: rect.top };
 
+    // Tính contribution của mỗi sao gần card
+    const contribs = [];
     shooters.forEach(s => {
       if (!s.alive) return;
       const dx = Math.max(0, rect.left - s.x, s.x - rect.right);
       const dy = Math.max(0, rect.top  - s.y, s.y - rect.bottom);
       const d  = Math.hypot(dx, dy);
-      if (d < minDist) { minDist = d; bestPt = closestBorderPoint(s.x, s.y, rect); }
+      if (d < MARGIN) {
+        const pt = closestBorderPoint(s.x, s.y, rect);
+        contribs.push({
+          lx: pt.x - (rect.left - 1),
+          ly: pt.y - (rect.top  - 1),
+          t:  1 - d / MARGIN          // intensity: 0→1 khi d: MARGIN→0
+        });
+      }
     });
-
-    if (minDist < MARGIN) target = 1 - minDist / MARGIN;
-    cardGlow += (target > cardGlow ? 0.22 : 0.07) * (target - cardGlow);
 
     glowEl.style.left   = `${rect.left  - 1}px`;
     glowEl.style.top    = `${rect.top   - 1}px`;
     glowEl.style.width  = `${rect.width + 2}px`;
     glowEl.style.height = `${rect.height + 2}px`;
-    glowEl.style.setProperty('--sx', `${bestPt.x - (rect.left - 1)}px`);
-    glowEl.style.setProperty('--sy', `${bestPt.y - (rect.top  - 1)}px`);
-    glowEl.style.opacity = cardGlow;
+
+    if (contribs.length === 0) {
+      glowEl.style.opacity = 0;
+      return;
+    }
+
+    // Mỗi sao → 1 radial-gradient tại điểm viền gần nhất với nó
+    glowEl.style.background = contribs.map(c =>
+      `radial-gradient(circle 65px at ${c.lx.toFixed(1)}px ${c.ly.toFixed(1)}px,` +
+      `rgba(215,238,255,${c.t.toFixed(3)}),` +
+      `rgba(175,215,255,${(c.t * 0.55).toFixed(3)}) 38%,transparent 68%)`
+    ).join(',');
+    glowEl.style.opacity = 1;
   }
 
   // ── Shooting Stars — cải thiện ──
