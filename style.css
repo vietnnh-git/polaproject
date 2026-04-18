@@ -151,16 +151,16 @@ body {
   display: flex; align-items: center; justify-content: center; gap: 0.45rem;
 }
 
-/* Gradient shimmer lives on the text span, NOT the flex h1
-   (background-clip:text + filter on a flex container breaks rendering) */
+/* Gradient shimmer lives on the text span, NOT the flex h1.
+   IMPORTANT: never add filter: on an element that also has background-clip:text
+   — it's a Chrome bug that makes text invisible. Shadow is omitted intentionally. */
 .title-text {
-  display: inline;
+  display: inline-block;
   background: linear-gradient(100deg,
     #fde68a  0%, #ffffff 18%, #c4b5fd 35%,
     #fde68a 52%, #ffffff 68%, #c4b5fd 85%, #fde68a 100%);
   background-size: 200% auto;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.8));
   animation: title-shimmer 5.5s ease-in-out infinite;
 }
 @keyframes title-shimmer {
