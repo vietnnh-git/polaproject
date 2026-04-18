@@ -1,9 +1,10 @@
-// ── Firefly forest ──
+// ── Star Field ──
 (function () {
   const canvas = document.getElementById('fireflies');
   const ctx    = canvas.getContext('2d');
-  const COUNT  = 70;
-  const flies  = [];
+  const STAR_COUNT = 200;
+  const stars  = [];
+  let   shootingStars = [];
 
   function resize() {
     canvas.width  = window.innerWidth;
@@ -12,67 +13,97 @@
   resize();
   window.addEventListener('resize', resize);
 
-  class Firefly {
+  class Star {
     constructor() { this.init(); }
 
     init() {
-      this.x      = Math.random() * canvas.width;
-      this.y      = Math.random() * canvas.height;
-      this.vx     = (Math.random() - 0.5) * 0.35;
-      this.vy     = (Math.random() - 0.5) * 0.35;
-      this.r      = Math.random() * 1.8 + 0.8;       // core radius
-      this.glow   = this.r * (5 + Math.random() * 5); // glow radius
-      this.phase  = Math.random() * Math.PI * 2;
-      this.speed  = 0.018 + Math.random() * 0.025;
-      // golden-yellow to yellow-green hue
-      this.hue    = 48 + Math.random() * 30;
-      this.sat    = 90 + Math.random() * 10;
+      this.x     = Math.random() * canvas.width;
+      this.y     = Math.random() * canvas.height;
+      this.r     = Math.random() * 1.1 + 0.2;
+      this.glow  = this.r * (3 + Math.random() * 5);
+      this.phase = Math.random() * Math.PI * 2;
+      this.speed = 0.004 + Math.random() * 0.012;
+      // 85% white-blue, 15% warm gold
+      const cold = Math.random() > 0.15;
+      this.hue   = cold ? (210 + Math.random() * 50) : (45 + Math.random() * 20);
+      this.sat   = cold ? (20 + Math.random() * 45) : (80 + Math.random() * 15);
+      this.lum   = 85 + Math.random() * 15;
     }
 
     update() {
       this.phase += this.speed;
-      // gentle random drift
-      this.vx += (Math.random() - 0.5) * 0.018;
-      this.vy += (Math.random() - 0.5) * 0.018;
-      const max = 0.5;
-      this.vx = Math.max(-max, Math.min(max, this.vx));
-      this.vy = Math.max(-max, Math.min(max, this.vy));
-      this.x += this.vx;
-      this.y += this.vy;
-      // wrap around
-      if (this.x < -20)              this.x = canvas.width  + 20;
-      if (this.x > canvas.width + 20) this.x = -20;
-      if (this.y < -20)               this.y = canvas.height + 20;
-      if (this.y > canvas.height + 20) this.y = -20;
     }
 
     draw() {
-      const alpha = (Math.sin(this.phase) * 0.5 + 0.5); // 0..1
-      if (alpha < 0.04) return;
+      const alpha = 0.25 + (Math.sin(this.phase) * 0.5 + 0.5) * 0.75;
 
-      // outer glow
       const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.glow);
-      g.addColorStop(0,   `hsla(${this.hue},${this.sat}%,72%,${alpha * 0.65})`);
-      g.addColorStop(0.35,`hsla(${this.hue},${this.sat}%,60%,${alpha * 0.28})`);
-      g.addColorStop(1,   `hsla(${this.hue},${this.sat}%,50%,0)`);
+      g.addColorStop(0,   `hsla(${this.hue},${this.sat}%,${this.lum}%,${alpha * 0.5})`);
+      g.addColorStop(1,   `hsla(${this.hue},${this.sat}%,${this.lum}%,0)`);
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.glow, 0, Math.PI * 2);
       ctx.fillStyle = g;
       ctx.fill();
 
-      // bright core
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = `hsla(${this.hue},100%,92%,${alpha})`;
+      ctx.fillStyle = `hsla(${this.hue},${this.sat}%,${this.lum}%,${alpha})`;
       ctx.fill();
     }
   }
 
-  for (let i = 0; i < COUNT; i++) flies.push(new Firefly());
+  class ShootingStar {
+    constructor() {
+      this.x    = Math.random() * canvas.width * 0.75;
+      this.y    = Math.random() * canvas.height * 0.45;
+      const spd = 9 + Math.random() * 7;
+      const ang = Math.PI / 5 + Math.random() * Math.PI / 5;
+      this.vx   = Math.cos(ang) * spd;
+      this.vy   = Math.sin(ang) * spd;
+      this.life = 1;
+      this.dead = false;
+    }
+
+    update() {
+      this.x    += this.vx;
+      this.y    += this.vy;
+      this.life -= 0.022;
+      if (this.life <= 0) this.dead = true;
+    }
+
+    draw() {
+      const tail = { x: this.x - this.vx * 9, y: this.y - this.vy * 9 };
+      const g = ctx.createLinearGradient(tail.x, tail.y, this.x, this.y);
+      g.addColorStop(0, `rgba(255,255,255,0)`);
+      g.addColorStop(1, `rgba(220,210,255,${this.life * 0.9})`);
+      ctx.beginPath();
+      ctx.moveTo(tail.x, tail.y);
+      ctx.lineTo(this.x, this.y);
+      ctx.strokeStyle = g;
+      ctx.lineWidth   = 1.5;
+      ctx.stroke();
+
+      // bright head
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, 1.2, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${this.life})`;
+      ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < STAR_COUNT; i++) stars.push(new Star());
+
+  function launchShootingStar() {
+    shootingStars.push(new ShootingStar());
+    setTimeout(launchShootingStar, 3000 + Math.random() * 4000);
+  }
+  setTimeout(launchShootingStar, 1200 + Math.random() * 2000);
 
   function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    flies.forEach(f => { f.update(); f.draw(); });
+    stars.forEach(s => { s.update(); s.draw(); });
+    shootingStars.forEach(s => { s.update(); s.draw(); });
+    shootingStars = shootingStars.filter(s => !s.dead);
     requestAnimationFrame(loop);
   }
   loop();
@@ -108,7 +139,6 @@ audio.muted  = true;
 audio.volume = 0.6;
 audio.currentTime = 33;
 
-// Loop về giây 33 thay vì 0
 audio.removeAttribute('loop');
 audio.addEventListener('ended', () => {
   audio.currentTime = 33;
