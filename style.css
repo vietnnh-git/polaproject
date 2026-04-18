@@ -149,7 +149,12 @@ body {
   font-size: 2.2rem; font-weight: 400; text-align: center;
   letter-spacing: 0.01em; margin-bottom: 0.4rem;
   display: flex; align-items: center; justify-content: center; gap: 0.45rem;
-  /* Gradient 200% wide — position animates for shimmer sweep */
+}
+
+/* Gradient shimmer lives on the text span, NOT the flex h1
+   (background-clip:text + filter on a flex container breaks rendering) */
+.title-text {
+  display: inline;
   background: linear-gradient(100deg,
     #fde68a  0%, #ffffff 18%, #c4b5fd 35%,
     #fde68a 52%, #ffffff 68%, #c4b5fd 85%, #fde68a 100%);
@@ -164,7 +169,6 @@ body {
 }
 
 /* Per-letter brightness wave — L→R stagger */
-.title-text { display: inline; }
 .title-text .l { animation: letter-wave 5s ease-in-out infinite; }
 .l0  { animation-delay:  0.00s; }
 .l1  { animation-delay:  0.20s; }
@@ -278,7 +282,7 @@ body {
   width: 26px; height: 26px;
   transform: translateY(-50%) translateX(-50%);
   animation: tip-slide 1.4s cubic-bezier(.22,1,.36,1) 0.5s forwards,
-             star-spin  1.8s linear infinite,
+             tip-spin   1.8s linear infinite,
              weld-glow  0.6s ease-in-out infinite alternate;
   z-index: 5; pointer-events: none;
 }
@@ -339,7 +343,7 @@ body {
   100% { opacity: 1;   transform: translate(-50%, -50%) scaleX(1.15); }
 }
 
-@keyframes star-spin {
+@keyframes tip-spin {
   from { transform: translateY(-50%) translateX(-50%) rotate(0deg); }
   to   { transform: translateY(-50%) translateX(-50%) rotate(360deg); }
 }
