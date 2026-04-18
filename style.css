@@ -151,40 +151,13 @@ body {
   display: flex; align-items: center; justify-content: center; gap: 0.45rem;
 }
 
-/* Gradient shimmer lives on the text span, NOT the flex h1.
-   IMPORTANT: never add filter: on an element that also has background-clip:text
-   — it's a Chrome bug that makes text invisible. Shadow is omitted intentionally. */
+/* Title text — static gradient, no animation tricks that break on Chrome */
 .title-text {
   display: inline-block;
-  background: linear-gradient(100deg,
-    #fde68a  0%, #ffffff 18%, #c4b5fd 35%,
-    #fde68a 52%, #ffffff 68%, #c4b5fd 85%, #fde68a 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  animation: title-shimmer 5.5s ease-in-out infinite;
-}
-@keyframes title-shimmer {
-  0%, 100% { background-position: 0% center; }
-  50%      { background-position: 100% center; }
-}
-
-/* Per-letter brightness wave — L→R stagger */
-.title-text .l { animation: letter-wave 5s ease-in-out infinite; }
-.l0  { animation-delay:  0.00s; }
-.l1  { animation-delay:  0.20s; }
-.l2  { animation-delay:  0.40s; }
-.l3  { animation-delay:  0.60s; }
-.l4  { animation-delay:  0.75s; }
-.l5  { animation-delay:  0.95s; }
-.l6  { animation-delay:  1.15s; }
-.l7  { animation-delay:  1.35s; }
-.l8  { animation-delay:  1.55s; }
-.l9  { animation-delay:  1.75s; }
-.l10 { animation-delay:  1.95s; }
-.l11 { animation-delay:  2.15s; }
-@keyframes letter-wave {
-  0%, 70%, 100% { opacity: 0.72; }
-  35%           { opacity: 1.00; }
+  background: linear-gradient(90deg, #fde68a 0%, #ffffff 42%, #c4b5fd 72%, #fde68a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* Star wrapper — hover scale */
