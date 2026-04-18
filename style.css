@@ -151,13 +151,23 @@ body {
   display: flex; align-items: center; justify-content: center; gap: 0.45rem;
 }
 
-/* Title text — static gradient, no animation tricks that break on Chrome */
+/* Title text — shimmer gradient, no filter on this element (Chrome bug) */
 .title-text {
   display: inline-block;
-  background: linear-gradient(90deg, #fde68a 0%, #ffffff 42%, #c4b5fd 72%, #fde68a 100%);
+  background: linear-gradient(90deg,
+    #fde68a  0%,
+    #ffffff  35%,
+    #c4b5fd  65%,
+    #fde68a  100%);
+  background-size: 250% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  animation: title-shimmer 6s ease-in-out infinite;
+}
+@keyframes title-shimmer {
+  0%, 100% { background-position: 0%   center; }
+  50%      { background-position: 100% center; }
 }
 
 /* Star wrapper — hover scale */
