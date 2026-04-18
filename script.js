@@ -160,20 +160,27 @@
 
   class ShootingStar {
     constructor() {
-      // Spawn rộng hơn: bất kỳ đâu trong 80% trên-trái màn hình
-      this.x = Math.random() * canvas.width  * 0.82;
-      this.y = Math.random() * canvas.height * 0.50;
+      // Spawn từ rìa màn hình — 60% từ trên, 40% từ trái
+      const ang = Math.PI * (28 + Math.random() * 24) / 180;
+      if (Math.random() < 0.60) {
+        // Từ rìa trên
+        this.x = Math.random() * canvas.width * 0.85;
+        this.y = -10;
+      } else {
+        // Từ rìa trái
+        this.x = -10;
+        this.y = Math.random() * canvas.height * 0.60;
+      }
 
-      // Góc: 28°–52° (đa dạng hơn trước)
-      const ang     = Math.PI * (28 + Math.random() * 24) / 180;
       const spd     = 4 + Math.random() * 4;
       this.vx       = Math.cos(ang) * spd;
       this.vy       = Math.sin(ang) * spd;
-      this.tailLen  = 120 + Math.random() * 160;
-      this.width    = 1.5 + Math.random() * 1.5;
+      this.tailLen  = 200 + Math.random() * 200;   // dài hơn — sao chổi
+      this.width    = 0.35 + Math.random() * 0.45; // mỏng hơn nhiều
       this.alpha    = 0;
-      this.maxAlpha = 0.55 + Math.random() * 0.45;
+      this.maxAlpha = 0.50 + Math.random() * 0.35;
       this.alive    = true;
+      this.traveled = 0; // để fade-in theo khoảng cách đi được
 
       // Màu: trắng-xanh lạnh thiên hà
       const pal = [[255,255,255],[225,235,255],[205,218,255],[210,228,255]];
@@ -181,46 +188,70 @@
     }
 
     update() {
-      this.x += this.vx;
-      this.y += this.vy;
+      this.x        += this.vx;
+      this.y        += this.vy;
+      this.traveled += Math.hypot(this.vx, this.vy);
 
-      // Fade in nhanh
-      this.alpha = Math.min(this.alpha + 0.11, this.maxAlpha);
+      // Fade in trong 120px đầu kể từ rìa màn hình
+      const fadeIn  = Math.min(this.traveled / 120, 1);
 
-      // Fade out gần mép màn hình
-      const edge = Math.min(canvas.width - this.x, canvas.height - this.y, this.x + 40);
-      if (edge < 140) this.alpha *= edge / 140;
+      // Fade out khi gần rìa phải / rìa dưới
+      const toRight  = canvas.width  - this.x;
+      const toBottom = canvas.height - this.y;
+      const fadeOut  = Math.max(0, Math.min(toRight, toBottom, 180) / 180);
 
-      if (this.x > canvas.width + 30 || this.y > canvas.height + 30 || this.alpha < 0.008)
+      this.alpha = this.maxAlpha * fadeIn * fadeOut;
+
+      if (this.x > canvas.width + 20 || this.y > canvas.height + 20)
         this.alive = false;
     }
 
     draw() {
-      if (this.alpha < 0.008) return;
+      if (this.alpha < 0.006) return;
       const [r, g, b] = this.rgb;
-      const spd  = Math.hypot(this.vx, this.vy);
-      const dirX = this.vx / spd, dirY = this.vy / spd;
-      const perpX = -dirY, perpY = dirX;
+      const spd   = Math.hypot(this.vx, this.vy);
+      const dirX  = this.vx / spd, dirY = this.vy / spd;
+      const perpX = -dirY,  perpY = dirX;
       const tailX = this.x - dirX * this.tailLen;
       const tailY = this.y - dirY * this.tailLen;
-      const hw = this.width * 1.8;
+      const hw    = this.width; // bán chiều rộng lõi (mỏng)
 
-      // Layer 1: wide soft glow polygon (3D depth illusion)
-      const glowGrad = ctx.createLinearGradient(this.x, this.y, tailX, tailY);
-      glowGrad.addColorStop(0,   `rgba(${r},${g},${b},${(this.alpha * 0.25).toFixed(3)})`);
-      glowGrad.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+      // ── Motion blur: 3 lớp ghost mờ dần phía sau ──
+      for (let i = 3; i >= 1; i--) {
+        const gAlpha = this.alpha * (0.07 * (4 - i)); // 0.07, 0.14, 0.21 → nhẹ
+        const ox = -dirX * i * 5;
+        const oy = -dirY * i * 5;
+        const gbGrad = ctx.createLinearGradient(
+          this.x + ox, this.y + oy,
+          tailX  + ox, tailY  + oy
+        );
+        gbGrad.addColorStop(0, `rgba(${r},${g},${b},${gAlpha.toFixed(3)})`);
+        gbGrad.addColorStop(1, `rgba(${r},${g},${b},0)`);
+        ctx.beginPath();
+        ctx.moveTo((this.x + ox) + perpX * hw * 2, (this.y + oy) + perpY * hw * 2);
+        ctx.lineTo(tailX + ox, tailY + oy);
+        ctx.lineTo((this.x + ox) - perpX * hw * 2, (this.y + oy) - perpY * hw * 2);
+        ctx.closePath();
+        ctx.fillStyle = gbGrad;
+        ctx.fill();
+      }
+
+      // ── Lớp hào quang mềm bên ngoài ──
+      const outerGrad = ctx.createLinearGradient(this.x, this.y, tailX, tailY);
+      outerGrad.addColorStop(0,   `rgba(${r},${g},${b},${(this.alpha * 0.18).toFixed(3)})`);
+      outerGrad.addColorStop(1,   `rgba(${r},${g},${b},0)`);
       ctx.beginPath();
-      ctx.moveTo(this.x + perpX * hw * 3, this.y + perpY * hw * 3);
+      ctx.moveTo(this.x + perpX * hw * 4, this.y + perpY * hw * 4);
       ctx.lineTo(tailX, tailY);
-      ctx.lineTo(this.x - perpX * hw * 3, this.y - perpY * hw * 3);
+      ctx.lineTo(this.x - perpX * hw * 4, this.y - perpY * hw * 4);
       ctx.closePath();
-      ctx.fillStyle = glowGrad;
+      ctx.fillStyle = outerGrad;
       ctx.fill();
 
-      // Layer 2: bright core tail polygon — tapers head→point
+      // ── Lõi sắc nét — thuôn từ đầu → đuôi ──
       const coreGrad = ctx.createLinearGradient(this.x, this.y, tailX, tailY);
-      coreGrad.addColorStop(0,    `rgba(${r},${g},${b},${this.alpha})`);
-      coreGrad.addColorStop(0.35, `rgba(${r},${g},${b},${(this.alpha * 0.55).toFixed(3)})`);
+      coreGrad.addColorStop(0,    `rgba(${r},${g},${b},${this.alpha.toFixed(3)})`);
+      coreGrad.addColorStop(0.40, `rgba(${r},${g},${b},${(this.alpha * 0.50).toFixed(3)})`);
       coreGrad.addColorStop(1,    `rgba(${r},${g},${b},0)`);
       ctx.beginPath();
       ctx.moveTo(this.x + perpX * hw, this.y + perpY * hw);
@@ -230,20 +261,21 @@
       ctx.fillStyle = coreGrad;
       ctx.fill();
 
-      // Hào quang đầu sao
-      const gl = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, hw * 5);
-      gl.addColorStop(0,    `rgba(${r},${g},${b},${this.alpha})`);
-      gl.addColorStop(0.35, `rgba(${r},${g},${b},${(this.alpha * 0.35).toFixed(3)})`);
+      // ── Hào quang đầu sao — nhỏ và chặt ──
+      const headR = hw * 5;
+      const gl    = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, headR);
+      gl.addColorStop(0,    `rgba(${r},${g},${b},${this.alpha.toFixed(3)})`);
+      gl.addColorStop(0.40, `rgba(${r},${g},${b},${(this.alpha * 0.28).toFixed(3)})`);
       gl.addColorStop(1,    `rgba(${r},${g},${b},0)`);
       ctx.beginPath();
-      ctx.arc(this.x, this.y, hw * 5, 0, Math.PI * 2);
+      ctx.arc(this.x, this.y, headR, 0, Math.PI * 2);
       ctx.fillStyle = gl;
       ctx.fill();
 
-      // Lõi trắng sáng
+      // ── Hạt nhân trắng cực nhỏ ──
       ctx.beginPath();
-      ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,255,255,${Math.min(this.alpha * 1.8, 1).toFixed(3)})`;
+      ctx.arc(this.x, this.y, 0.8, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${Math.min(this.alpha * 2.2, 1).toFixed(3)})`;
       ctx.fill();
     }
   }
